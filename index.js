@@ -1,13 +1,17 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'GLTFLoader';
 // import {BufferGeometryUtils} from 'BufferGeometryUtils';
+import { GLTFAudioEmitterExtension } from "three-omi";
 import {renderer, scene, app} from 'app';
 
 (async () => {
 
 const u = app.files['./fox.glb'];
 let o = await new Promise((accept, reject) => {
-  new GLTFLoader().load(u, accept, function progress() {}, reject);
+  loader = new GLTFLoader();
+  const audioListener = new AudioListener(); // need to get the scene listener
+  loader.register(parser => new GLTFAudioEmitterExtension(parser, audioListener));
+  loader.load(u, accept, function progress() {}, reject);
 });
 o = o.scene;
 app.object.add(o);
